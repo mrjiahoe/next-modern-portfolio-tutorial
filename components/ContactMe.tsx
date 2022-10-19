@@ -14,7 +14,9 @@ type Props = {};
 function ContactMe({}: Props) {
 	const { register, handleSubmit } = useForm();
 
-	const onSubmit: SubmitHandler<Inputs> = (formData) => console.log(formData);
+	const onSubmit: SubmitHandler<Inputs> = (formData) => {
+		window.location.href = `mailto:user@mail.com?subject=${formData.subject}&body=Hi, my name is ${formData.name}. ${formData.message} (${formData.email})`;
+	};
 
 	return (
 		<div className="h-screen">
