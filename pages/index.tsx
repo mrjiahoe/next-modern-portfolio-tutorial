@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import type { GetStaticProps } from "next";
+import { groq } from "next-sanity";
 import Head from "next/head";
 import Link from "next/link";
 import About from "../components/About";
@@ -9,8 +10,9 @@ import Hero from "../components/Hero";
 import Projects from "../components/Projects";
 import Skills from "../components/Skills";
 import WorkExperience from "../components/WorkExperience";
+import { sanityClient } from "../sanity";
 import { Experience, PageInfo, Project, Skill, Social } from "../typings";
-import { fetchExperiences } from "../utils/fetchExperience";
+import { fetchExperiences } from "../utils/fetchExperiences";
 import { fetchPageInfo } from "../utils/fetchPageInfo";
 import { fetchProjects } from "../utils/fetchProjects";
 import { fetchSkills } from "../utils/fetchSkills";
@@ -31,7 +33,7 @@ const Home = ({ pageInfo, experiences, projects, skills, socials }: Props) => {
 				<title>Jia Hoe&apos;s Portfolio</title>
 			</Head>
 
-			<Header />
+			<Header socials={socials} />
 
 			{/* Hero */}
 			<section id="hero" className="snap-start">
@@ -81,11 +83,32 @@ const Home = ({ pageInfo, experiences, projects, skills, socials }: Props) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-	const pageInfo: PageInfo = await fetchPageInfo();
-	const experiences: Experience[] = await fetchExperiences();
-	const skills: Skill[] = await fetchSkills();
-	const projects: Project[] = await fetchProjects();
-	const socials: Social[] = await fetchSocials();
+	const pageInfo: PageInfo = await sanityClient.fetch(groq`
+	*[_type == "pageInfo"][0]
+`);
+	const experiences: Experience[] = await sanityClient.fetch(groq`
+	*[_type == "experience"] {
+		...,
+		technologies[]->
+	}
+`);
+	const skills: Skill[] = await sanityClient.fetch(groq`
+	*[_type == "skill"]
+`);
+	const projects: Project[] = await sanityClient.fetch(groq`
+	*[_type == "project"] {
+		...,
+		technologies[]->
+	}
+`);
+	const socials: Social[] = await await sanityClient.fetch(groq`
+	*[_type == "social"]
+`);
+	// const pageInfo: PageInfo = await fetchPageInfo();
+	// const experiences: Experience[] = await fetchExperiences();
+	// const skills: Skill[] = await fetchSkills();
+	// const projects: Project[] = await fetchProjects();
+	// const socials: Social[] = await fetchSocials();
 
 	return {
 		props: {
@@ -102,3 +125,13 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 		revalidate: 10,
 	};
 };
+
+// export const getStaticProps: GetStaticProps<Props> = async() => {
+// 	const res = await sanityClient.fetch(query)
+// const experience:Experience[]= res
+// const res2= await sanityClient.fetch(query2)
+// const projects: Project[]=res2
+// const res3 = await sanityClient.fetch(query3)
+// const skills: Skill[]= res3
+// const res4 = await sanityClient.fetch(query4)
+// const socials: Social[]= res4
