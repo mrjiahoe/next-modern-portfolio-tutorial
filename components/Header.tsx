@@ -28,21 +28,14 @@ export default function Header({ socials }: Props) {
 				className="flex flex-row items-center"
 			>
 				{/* Social Icons */}
-				<SocialIcon
-					url="https://www.youtube.com"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				<SocialIcon
-					url="https://www.youtube.com"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				<SocialIcon
-					url="https://www.youtube.com"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
+				{socials.map((social) => (
+					<SocialIcon
+						key={socials._id}
+						url={socials.url}
+						fgColor="gray"
+						bgColor="transparent"
+					/>
+				))}
 			</motion.div>
 
 			<Link href="#contact">

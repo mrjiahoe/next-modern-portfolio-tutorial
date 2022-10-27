@@ -39,32 +39,26 @@ const Home = ({ pageInfo, experiences, projects, skills, socials }: Props) => {
 			<section id="hero" className="snap-start">
 				<Hero />
 			</section>
-
 			{/* About */}
 			<section id="about" className="snap-center">
 				<About />
 			</section>
-
 			{/* Experience */}
 			<section id="experience" className="snap-center">
 				<WorkExperience />
 			</section>
-
 			{/* Skills */}
 			<section id="skills" className="snap-start">
 				<Skills />
 			</section>
-
 			{/* Projects */}
 			<section id="projects" className="snap-start">
 				<Projects />
 			</section>
-
 			{/* Contact */}
 			<section id="contact" className="snap-start">
 				<ContactMe />
 			</section>
-
 			<Link href="#hero">
 				<footer className="sticky bottom-5 w-full cursor-pointer">
 					<div className="flex items-center justify-center">
@@ -83,28 +77,28 @@ const Home = ({ pageInfo, experiences, projects, skills, socials }: Props) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-	const pageInfo: PageInfo = await sanityClient.fetch(groq`
-	*[_type == "pageInfo"][0]
-`);
+	// const pageInfo: PageInfo = await sanityClient.fetch(groq`
+	// 	*[_type == "pageInfo"][0]
+	// `);
 	const experiences: Experience[] = await sanityClient.fetch(groq`
-	*[_type == "experience"] {
-		...,
-		technologies[]->
-	}
-`);
+		*[_type == "experience"] {
+			...,
+			technologies[]->
+		}
+	`);
 	const skills: Skill[] = await sanityClient.fetch(groq`
-	*[_type == "skill"]
-`);
+		*[_type == "skill"]
+	`);
 	const projects: Project[] = await sanityClient.fetch(groq`
-	*[_type == "project"] {
-		...,
-		technologies[]->
-	}
-`);
+		*[_type == "project"] {
+			...,
+			technologies[]->
+		}
+	`);
 	const socials: Social[] = await await sanityClient.fetch(groq`
-	*[_type == "social"]
-`);
-	// const pageInfo: PageInfo = await fetchPageInfo();
+		*[_type == "social"]
+	`);
+	const pageInfo: PageInfo = await fetchPageInfo();
 	// const experiences: Experience[] = await fetchExperiences();
 	// const skills: Skill[] = await fetchSkills();
 	// const projects: Project[] = await fetchProjects();
